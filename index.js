@@ -23,9 +23,7 @@ app.post('/', async (req, res) => {
 
   try {
     const url = req.body.url;
-    const parsed = new URL(url);
-
-    const ip = await lookupPromise(parsed.hostname);
+    const ip = await lookupPromise(url);
 
     responseData.data = { ip };
   } catch (err) {
