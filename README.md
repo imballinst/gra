@@ -1,6 +1,6 @@
 ## gra
 
-Get the remote address of an URL.
+Get the remote address of a URL.
 
 ```bash
 curl --request POST \
