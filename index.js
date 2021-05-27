@@ -12,7 +12,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.post('/', async (req, res) => {
+app.post('/ip', async (req, res) => {
   const responseData = {};
 
   try {
