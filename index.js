@@ -1,6 +1,6 @@
 const express = require('express');
+const https = require('https');
 
-const dns = require('dns');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
@@ -39,10 +39,15 @@ app.listen(PORT, () => {
 });
 
 async function lookupPromise(url) {
-  return new Promise((resolve, reject) => {
-    dns.lookup(url, (err, address, family) => {
-      if (err) reject(err);
-      resolve(address);
-    });
+  return new Promise((resolve) => {
+    https.get(
+      url,
+      {
+        rejectUnauthorized: false
+      },
+      (res) => {
+        resolve(res.socket.remoteAddress);
+      }
+    );
   });
 }
