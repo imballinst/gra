@@ -1,18 +1,22 @@
-const express = require('express');
-const https = require('https');
+const dns = require("dns");
+const express = require("express");
 
-const cors = require('cors');
-const bodyParser = require('body-parser');
+const cors = require("cors");
+const { json, urlencoded } = require("body-parser");
 
 const PORT = process.env.PORT || 4000;
 
 const app = express();
 
 app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(json());
+app.use(urlencoded({ extended: false }));
 
-app.post('/ip', async (req, res) => {
+app.on("error", function onError(error) {
+  console.error(error);
+});
+
+app.post("/ip", async (req, res) => {
   const responseData = {};
 
   try {
@@ -32,16 +36,17 @@ app.listen(PORT, () => {
   console.log(`Example app listening at http://localhost:${PORT}`);
 });
 
+// Don't exit on error.
+process.on("uncaughtException", function () {});
+
 async function lookupPromise(url) {
-  return new Promise((resolve) => {
-    https.get(
-      url,
-      {
-        rejectUnauthorized: false
-      },
-      (res) => {
-        resolve(res.socket.remoteAddress);
-      }
-    );
+  return new Promise((resolve, reject) => {
+    const parsed = new URL(url);
+
+    dns.resolve4(parsed.hostname, (err, addresses) => {
+      if (err) reject(err);
+
+      resolve(addresses[0]);
+    });
   });
 }
