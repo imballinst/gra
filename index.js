@@ -27,6 +27,8 @@ app.post("/ip", async (req, res) => {
   } catch (err) {
     console.error(err);
     responseData.error = { message: err.message };
+
+    res.status(400);
   }
 
   res.json(responseData);
